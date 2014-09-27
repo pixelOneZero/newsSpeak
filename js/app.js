@@ -1,5 +1,5 @@
 var app = {
-	"name": "newsSpeak",
+	"name": "NewsSpeak",
 	"version": "0.1",
 	"endpoints": {
 		"headlines": {
@@ -17,7 +17,7 @@ var app = {
 	},
 	speak: function(message) {  
 		if ("SpeechSynthesisEvent" in window) {
-			console.log(message);
+			$('body').append('<hr/>' + message);
 			var msg = new SpeechSynthesisUtterance();
 			var voices = window.speechSynthesis.getVoices();
 			msg.voice = voices[10]; // Note: some voices don't support altering params
