@@ -1,3 +1,10 @@
+/*
+
+Tasks:
+- Cancel voice before right before user closes the window
+
+*/
+
 var app = {
 	"name": "NewsSpeak",
 	"version": "0.1",
@@ -11,7 +18,12 @@ var app = {
 	init: function() {
 		$.getJSON( app.endpoints.headlines.uri + "all/all.jsonp?api-key=" + app.endpoints.headlines.key + "&callback=?", function(data) {
 			$.each(data.results, function(i) {
-				app.speak(data.results[i].title + ": " + data.results[i].abstract);
+				
+				// Remove special characters so speech API does not utter ampersand, hash sign and number
+				var articleTitle = data.results[i].title;
+				var articleAbstract = data.results[i].abstract;
+				articleAbstract = articleAbstract.replace(/&#8217;/g,"").replace(/&#8220;/g,"").replace(/&#8221;/g,"");
+				app.speak( articleTitle + ": " + articleAbstract);
 			})
 		});
 	},
@@ -20,11 +32,15 @@ var app = {
 			$('body').append('<hr/>' + message);
 			var msg = new SpeechSynthesisUtterance();
 			var voices = window.speechSynthesis.getVoices();
-			msg.voice = voices[10]; // Note: some voices don't support altering params
+			// Note: some voices don't support altering params
+			msg.voice = voices[10]; 
 			msg.voiceURI = 'native';
-			msg.volume = 1; // 0 to 1
-			msg.rate = 1; // 0.1 to 10
-			msg.pitch = 1; //0 to 2
+			// 0 to 1
+			msg.volume = 1;
+			// 0.1 to 10
+			msg.rate = 1;
+			//0 to 2
+			msg.pitch = 1; 
 			msg.text = message;
 			msg.lang = 'en-US';
 
